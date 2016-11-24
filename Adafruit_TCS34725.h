@@ -36,13 +36,14 @@
 #ifndef _TCS34725_H_
 #define _TCS34725_H_
 
-#if ARDUINO >= 100
- #include <Arduino.h>
-#else
- #include <WProgram.h>
-#endif
+// #if ARDUINO >= 100
+//  #include <Arduino.h>
+// #else
+//  #include <WProgram.h>
+// #endif
 
-#include <Wire.h>
+// #include <Wire.h>
+#include <stdint.h>
 
 #define TCS34725_ADDRESS          (0x29)
 
@@ -119,7 +120,7 @@ class Adafruit_TCS34725 {
  public:
   Adafruit_TCS34725(tcs34725IntegrationTime_t = TCS34725_INTEGRATIONTIME_2_4MS, tcs34725Gain_t = TCS34725_GAIN_1X);
   
-  boolean  begin(void);
+  bool  begin(void);
   void     setIntegrationTime(tcs34725IntegrationTime_t it);
   void     setGain(tcs34725Gain_t gain);
   void     getRawData(uint16_t *r, uint16_t *g, uint16_t *b, uint16_t *c);
@@ -128,13 +129,14 @@ class Adafruit_TCS34725 {
   void     write8 (uint8_t reg, uint32_t value);
   uint8_t  read8 (uint8_t reg);
   uint16_t read16 (uint8_t reg);
-  void setInterrupt(boolean flag);
+  void setInterrupt(bool flag);
   void clearInterrupt(void);
   void setIntLimits(uint16_t l, uint16_t h);
   void     enable(void);
 
  private:
-  boolean _tcs34725Initialised;
+  bool _tcs34725Initialised;
+  int fileId;
   tcs34725Gain_t _tcs34725Gain;
   tcs34725IntegrationTime_t _tcs34725IntegrationTime; 
   

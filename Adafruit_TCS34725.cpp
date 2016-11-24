@@ -15,11 +15,8 @@
     v1.0 - First release
 */
 /**************************************************************************/
-#ifdef __AVR
-  #include <avr/pgmspace.h>
-#elif defined(ESP8266)
-  #include <pgmspace.h>
-#endif
+#include <wiringPi.h>
+#include <wiringPiI2C.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -46,15 +43,7 @@ float powf(const float x, const float y)
 /**************************************************************************/
 void Adafruit_TCS34725::write8 (uint8_t reg, uint32_t value)
 {
-  Wire.beginTransmission(TCS34725_ADDRESS);
-  #if ARDUINO >= 100
-  Wire.write(TCS34725_COMMAND_BIT | reg);
-  Wire.write(value & 0xFF);
-  #else
-  Wire.send(TCS34725_COMMAND_BIT | reg);
-  Wire.send(value & 0xFF);
-  #endif
-  Wire.endTransmission();
+  wiringPiI2CWriteReg8(fileId, TCS34725_COMMAND_BIT | reg,value & 0xFF);
 }
 
 /**************************************************************************/
@@ -64,20 +53,7 @@ void Adafruit_TCS34725::write8 (uint8_t reg, uint32_t value)
 /**************************************************************************/
 uint8_t Adafruit_TCS34725::read8(uint8_t reg)
 {
-  Wire.beginTransmission(TCS34725_ADDRESS);
-  #if ARDUINO >= 100
-  Wire.write(TCS34725_COMMAND_BIT | reg);
-  #else
-  Wire.send(TCS34725_COMMAND_BIT | reg);
-  #endif
-  Wire.endTransmission();
-
-  Wire.requestFrom(TCS34725_ADDRESS, 1);
-  #if ARDUINO >= 100
-  return Wire.read();
-  #else
-  return Wire.receive();
-  #endif
+  return wiringPiI2CReadReg8(fileId, TCS34725_COMMAND_BIT | reg);
 }
 
 /**************************************************************************/
@@ -87,27 +63,7 @@ uint8_t Adafruit_TCS34725::read8(uint8_t reg)
 /**************************************************************************/
 uint16_t Adafruit_TCS34725::read16(uint8_t reg)
 {
-  uint16_t x; uint16_t t;
-
-  Wire.beginTransmission(TCS34725_ADDRESS);
-  #if ARDUINO >= 100
-  Wire.write(TCS34725_COMMAND_BIT | reg);
-  #else
-  Wire.send(TCS34725_COMMAND_BIT | reg);
-  #endif
-  Wire.endTransmission();
-
-  Wire.requestFrom(TCS34725_ADDRESS, 2);
-  #if ARDUINO >= 100
-  t = Wire.read();
-  x = Wire.read();
-  #else
-  t = Wire.receive();
-  x = Wire.receive();
-  #endif
-  x <<= 8;
-  x |= t;
-  return x;
+  return wiringPiI2CReadReg16(fileId, TCS34725_COMMAND_BIT | reg);
 }
 
 /**************************************************************************/
@@ -161,9 +117,9 @@ Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_
     doing anything else)
 */
 /**************************************************************************/
-boolean Adafruit_TCS34725::begin(void) 
+bool Adafruit_TCS34725::begin(void) 
 {
-  Wire.begin();
+  fileId = wiringPiI2CSetup(TCS34725_ADDRESS);
   
   /* Make sure we're actually connected */
   uint8_t x = read8(TCS34725_ID);
@@ -305,7 +261,7 @@ uint16_t Adafruit_TCS34725::calculateLux(uint16_t r, uint16_t g, uint16_t b)
 }
 
 
-void Adafruit_TCS34725::setInterrupt(boolean i) {
+void Adafruit_TCS34725::setInterrupt(bool i) {
   uint8_t r = read8(TCS34725_ENABLE);
   if (i) {
     r |= TCS34725_ENABLE_AIEN;
@@ -316,13 +272,7 @@ void Adafruit_TCS34725::setInterrupt(boolean i) {
 }
 
 void Adafruit_TCS34725::clearInterrupt(void) {
-  Wire.beginTransmission(TCS34725_ADDRESS);
-  #if ARDUINO >= 100
-  Wire.write(TCS34725_COMMAND_BIT | 0x66);
-  #else
-  Wire.send(TCS34725_COMMAND_BIT | 0x66);
-  #endif
-  Wire.endTransmission();
+  wiringPiI2CWrite(fileId, TCS34725_COMMAND_BIT | 0x66);
 }
 
 

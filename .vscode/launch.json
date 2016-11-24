@@ -1,0 +1,59 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C++ Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/Adafruit_TCS34725_Rpi",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": false,
+            "preLaunchTask": "make",
+            "linux": {
+                "MIMode": "gdb"
+            },
+            "osx": {
+                "MIMode": "lldb"
+            },
+            "windows": {
+                "MIMode": "gdb"
+            }
+        },
+        {
+            "name": "C++ Launch Remote",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/Adafruit_TCS34725_Rpi",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": false,
+            "preLaunchTask": "makeToRemote",
+            "setupCommands": [
+                {
+                    "text": "target extended-remote testpi.local:2222"
+                },
+                {
+                    "text": "set remote exec-file Adafruit_TCS34725_Rpi"
+                }
+                
+            ],
+            // "miDebuggerServerAddress": "testpi.local:2222",
+            //"debugServerArgs": "extended-remote",
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "/usr/local/bin/arm-linux-gnueabihf-gdb"
+            },
+            "osx": {
+                "MIMode": "lldb"
+            },
+            "windows": {
+                "MIMode": "gdb"
+            }
+        }
+    ]
+}
