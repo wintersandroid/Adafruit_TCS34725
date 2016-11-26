@@ -32,7 +32,7 @@ ifeq ($(config),debug_arm)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -g -std=c++11 -Wformat=2 -Wall -pipe -fPIC
   CXXFLAGS  += $(CFLAGS) 
   LDFLAGS   += -L/usr/arm-linux-gnueabihf/lib
-  LIBS      += -lpthread -lrt -lwiringPi
+  LIBS      += -lrt -lwiringPi -lpthread 
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += 
   LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
